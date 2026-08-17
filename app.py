@@ -33,8 +33,9 @@ if prompt:
 
             def stream_generator():
                 for chunk in response:
-                    if chunk.choices.delta.content is not None:
-                        yield chunk.choices.delta.content
+                    # Added [0] index to read from the choices list correctly
+                    if chunk.choices and chunk.choices[0].delta.content is not None:
+                        yield chunk.choices[0].delta.content
 
             full_response = st.write_stream(stream_generator())
             st.session_state.messages.append({"role": "assistant", "content": full_response})
